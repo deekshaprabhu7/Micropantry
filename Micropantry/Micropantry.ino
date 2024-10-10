@@ -1,4 +1,5 @@
 #include "bme688.h"
+#include "reedSwitch.h"
 
 void setup()
 {
@@ -9,9 +10,11 @@ void setup()
   Serial.println("Micropantry Sensor Measurement!");
 
   bme688_init();
+  reedSwitch_init();
 }
 
 void loop()
 {
   bme688_run();
+  reedSwitch_run();
 }
