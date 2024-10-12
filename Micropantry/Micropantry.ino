@@ -1,3 +1,4 @@
+#include "wifiComm.h"
 #include "bme688.h"
 #include "reedSwitch.h"
 
@@ -8,6 +9,8 @@ void setup()
   Wire.begin();
 
   Serial.println("Micropantry Sensor Measurement!");
+
+  wifiSetup();
 
   bme688_init();
   reedSwitch_init();
