@@ -1,24 +1,28 @@
 #include "reedSwitch.h"
 
-const int switchPin = D0;
+volatile bool reedSwitchOpened = false;
+
+// ISR for the reed switch
+void IRAM_ATTR handleReedSwitchOpen()
+{
+  reedSwitchOpened = true; //Set flag when switch is open
+}
 
 void reedSwitch_init(void)
 {
-    pinMode(switchPin, INPUT);
+    pinMode(REED_SWITCH_PIN, INPUT);
+    
+    attachInterrupt(digitalPinToInterrupt(REED_SWITCH_PIN), handleReedSwitchOpen, RISING);
+    Serial.println("Reed Switch (Door) Interrupt Setup Complete!");
 }
 
 void reedSwitch_run(void)
 {
-  // Read the state of the switch 
-  int switchState = digitalRead(switchPin);
+    if (reedSwitchOpened) {
+    Serial.println("Door Opened!");
+    reedSwitchOpened = false;  // Reset the flag
 
-  // Print the state to the Serial Monitor
-  if (switchState == HIGH) {
-    Serial.println("Switch is ON");
-  } else {
-    Serial.println("Switch is OFF");
+    delay(50);
   }
-  delay(500);
-
 }
 
