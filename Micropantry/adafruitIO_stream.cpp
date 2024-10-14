@@ -1,5 +1,8 @@
 #include "adafruitIO_stream.h"
 
+unsigned long lastPublishTime = 0;  // Variable to store the last time data was sent
+unsigned long publishInterval = 10000;  // Interval for sending data in milliseconds (10 seconds)
+
 AdafruitIO_WiFi io(IO_USERNAME, IO_KEY, ssid, password);
 
 // Setup the 'temperature' feed
@@ -27,14 +30,12 @@ void adafruitIO_run()
 {
   io.run();
 
-  // Simulate a temperature reading
-  float temperature = 24.5;  // Replace this with actual sensor data
-  
-  // Send data to Adafruit IO
-  Serial.print("Sending temperature: ");
-  Serial.println(temperature);
-  temperatureFeed->save(temperature);
+  if (millis() - lastPublishTime > publishInterval)
+  {
+    lastPublishTime = millis();
 
-  // Wait 10 seconds before sending next reading
-  delay(10000);
+    Serial.print("Sending temperature: ");
+    Serial.println(temperature);
+    temperatureFeed->save(temperature);
+  }
 }

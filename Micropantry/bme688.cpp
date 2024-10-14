@@ -3,6 +3,8 @@
 /* Create an object of the class Bsec2 */
 Bsec2 envSensor;
 
+float temperature = 0;
+
 void bme688_init(void)
 {
     /* Desired subscription list of BSEC2 outputs */
@@ -105,6 +107,7 @@ void newDataCallback(const bme68xData data, const bsecOutputs outputs, Bsec2 bse
                 Serial.println("\tIAQ accuracy = " + String((int) output.accuracy));
                 break;
             case BSEC_OUTPUT_RAW_TEMPERATURE:
+                temperature = output.signal;
                 Serial.println("\tTemperature = " + String(output.signal));
                 break;
             case BSEC_OUTPUT_RAW_PRESSURE:

@@ -5,6 +5,8 @@
 #include <Wire.h>
 #include <bsec2.h>
 
+extern float temperature;
+
 /* Macros used */
 #define PANIC_LED   LED_BUILTIN
 #define ERROR_DUR   1000

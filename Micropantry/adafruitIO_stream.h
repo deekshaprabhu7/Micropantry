@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include "wifiComm.h"
 #include "AdafruitIO_WiFi.h"
+#include "bme688.h"
 
 // comment out the following lines if you are using fona or ethernet
 //#include "AdafruitIO_WiFi.h"
