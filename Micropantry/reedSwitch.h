@@ -5,6 +5,8 @@
 
 #define REED_SWITCH_PIN D0
 
+extern bool reedSwitchStatus;
+
 void reedSwitch_init(void);
 void reedSwitch_run(void);
 
