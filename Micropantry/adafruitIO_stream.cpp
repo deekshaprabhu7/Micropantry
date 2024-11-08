@@ -1,12 +1,17 @@
 #include "adafruitIO_stream.h"
 
 unsigned long lastPublishTime = 0;  // Variable to store the last time data was sent
-unsigned long publishInterval = 10000;  // Interval for sending data in milliseconds (10 seconds)
+unsigned long publishInterval = 30000;  // Interval for sending data in milliseconds (10 seconds)
 
 AdafruitIO_WiFi io(IO_USERNAME, IO_KEY, ssid, password);
 
 // Setup the 'temperature' feed
-AdafruitIO_Feed *temperatureFeed = io.feed("temperature");
+AdafruitIO_Feed *temperatureFeed = io.feed("Temperature");
+AdafruitIO_Feed *pressureFeed = io.feed("Pressure");
+AdafruitIO_Feed *humidityFeed = io.feed("Humidity");
+AdafruitIO_Feed *IAQFeed = io.feed("IAQ");
+AdafruitIO_Feed *reedSwitchFeed = io.feed("door-switch");
+
 
 void adafruitIO_init(void)
 {
@@ -34,8 +39,11 @@ void adafruitIO_run()
   {
     lastPublishTime = millis();
 
-    Serial.print("Sending temperature: ");
-    Serial.println(temperature);
+    Serial.print("Sending Data to Adafruit IO: ");
     temperatureFeed->save(temperature);
+    pressureFeed->save(pressure);
+    humidityFeed->save(humidity);
+    IAQFeed->save(IAQ);
+    reedSwitchFeed->save(reedSwitchStatus);
   }
 }
