@@ -15,6 +15,8 @@ void setup()
   adafruitIO_init();
   bme688_init();
   reedSwitch_init();
+
+    Serial.println("Micropantry Sensor Measurement Setup COMPLETE!");
 }
 
 void loop()

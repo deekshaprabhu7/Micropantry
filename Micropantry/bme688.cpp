@@ -1,7 +1,14 @@
+/* The code baseline for this is from bsec library example */
+
 #include "bme688.h"
 
 /* Create an object of the class Bsec2 */
 Bsec2 envSensor;
+
+float temperature = 0;
+float pressure = 0;
+float humidity = 0;
+float IAQ = 0;
 
 void bme688_init(void)
 {
@@ -101,16 +108,20 @@ void newDataCallback(const bme68xData data, const bsecOutputs outputs, Bsec2 bse
         switch (output.sensor_id)
         {
             case BSEC_OUTPUT_IAQ:
+                IAQ = output.signal;
                 Serial.println("\tIAQ = " + String(output.signal));
                 Serial.println("\tIAQ accuracy = " + String((int) output.accuracy));
                 break;
             case BSEC_OUTPUT_RAW_TEMPERATURE:
+                temperature = output.signal;
                 Serial.println("\tTemperature = " + String(output.signal));
                 break;
             case BSEC_OUTPUT_RAW_PRESSURE:
+                pressure = output.signal;
                 Serial.println("\tPressure = " + String(output.signal));
                 break;
             case BSEC_OUTPUT_RAW_HUMIDITY:
+                humidity = output.signal;
                 Serial.println("\tHumidity = " + String(output.signal));
                 break;
             case BSEC_OUTPUT_RAW_GAS:
