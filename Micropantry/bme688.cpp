@@ -1,5 +1,3 @@
-/* The code baseline for this is from bsec library example */
-
 #include "bme688.h"
 
 /* Create an object of the class Bsec2 */

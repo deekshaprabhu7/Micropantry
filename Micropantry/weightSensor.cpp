@@ -8,6 +8,13 @@ Adafruit_MPR121 cap = Adafruit_MPR121();
 uint16_t lasttouched = 0;
 uint16_t currtouched = 0;
 
+volatile bool touchInterruptFlag = false;
+
+//  ISR triggered by the MPR121 INT pin
+void IRAM_ATTR touchISR() {
+  touchInterruptFlag = true;  // Set flag when interrupt occurs
+}
+
 void mpr121_init(void)
 {
   // Default address is 0x5A, if tied to 3.3V its 0x5B
@@ -18,43 +25,51 @@ void mpr121_init(void)
   }
   Serial.println("MPR121 found!");
   cap.setThresholds(2, 3);
+
+  pinMode(MPR121_INT_PIN, INPUT_PULLUP);  // Configure INT pin as input with pull-up
+  attachInterrupt(digitalPinToInterrupt(MPR121_INT_PIN), touchISR, FALLING);  // Trigger on falling edge
 }
 
 void mpr121_run(void)
 {
-  // Get the currently touched pads
-  currtouched = cap.touched();
-  
-  for (uint8_t i=0; i<12; i++) {
-    // it if *is* touched and *wasnt* touched before, alert!
-    if ((currtouched & _BV(i)) && !(lasttouched & _BV(i)) ) {
-      Serial.print(i); Serial.println(" touched");
-    }
-    // if it *was* touched and now *isnt*, alert!
-    if (!(currtouched & _BV(i)) && (lasttouched & _BV(i)) ) {
-      Serial.print(i); Serial.println(" released");
-    }
-  }
+  // Check if the ISR flag is set (indicating a touch event)
+  if (touchInterruptFlag) {
+    touchInterruptFlag = false;  // Reset the flag
 
-  // reset our state
-  lasttouched = currtouched;
+    // Get the currently touched pads
+    currtouched = cap.touched();
+    
+    for (uint8_t i=0; i<12; i++) {
+      // it if *is* touched and *wasnt* touched before, alert!
+      if ((currtouched & _BV(i)) && !(lasttouched & _BV(i)) ) {
+        Serial.print(i); Serial.println(" touched");
+      }
+      // if it *was* touched and now *isnt*, alert!
+      if (!(currtouched & _BV(i)) && (lasttouched & _BV(i)) ) {
+        Serial.print(i); Serial.println(" released");
+      }
+    }
 
-  // comment out this line for detailed data from the sensor!
-  return;
-  
-  // debugging info, what
-  Serial.print("\t\t\t\t\t\t\t\t\t\t\t\t\t 0x"); Serial.println(cap.touched(), HEX);
-  Serial.print("Filt: ");
-  for (uint8_t i=0; i<12; i++) {
-    Serial.print(cap.filteredData(i)); Serial.print("\t");
+    // reset our state
+    lasttouched = currtouched;
+
+    // comment out this line for detailed data from the sensor!
+    return;
+    
+    // debugging info, what
+    Serial.print("\t\t\t\t\t\t\t\t\t\t\t\t\t 0x"); Serial.println(cap.touched(), HEX);
+    Serial.print("Filt: ");
+    for (uint8_t i=0; i<12; i++) {
+      Serial.print(cap.filteredData(i)); Serial.print("\t");
+    }
+    Serial.println();
+    Serial.print("Base: ");
+    for (uint8_t i=0; i<12; i++) {
+      Serial.print(cap.baselineData(i)); Serial.print("\t");
+    }
+    Serial.println();
+    
+    // put a delay so it isn't overwhelming
+    delay(100);
   }
-  Serial.println();
-  Serial.print("Base: ");
-  for (uint8_t i=0; i<12; i++) {
-    Serial.print(cap.baselineData(i)); Serial.print("\t");
-  }
-  Serial.println();
-  
-  // put a delay so it isn't overwhelming
-  delay(100);
 }
