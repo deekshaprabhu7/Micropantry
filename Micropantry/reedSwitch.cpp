@@ -14,7 +14,7 @@ void reedSwitch_init(void)
     pinMode(REED_SWITCH_PIN, INPUT);
     
     attachInterrupt(digitalPinToInterrupt(REED_SWITCH_PIN), reedSwitchStateChange, CHANGE);
-    Serial.println("Reed Switch (Door) Interrupt Setup Complete!");
+    DEBUG_PRINTLN("Reed Switch (Door) Interrupt Setup Complete!");
 }
 
 void reedSwitch_run(void)
@@ -25,13 +25,13 @@ void reedSwitch_run(void)
     // If switch is HIGH, the door is CLOSED
     if (switchState == HIGH) {
       reedSwitchStatus = true;  // Door is CLOSED
-      Serial.println("Door CLOSED!");
+      DEBUG_PRINTLN("Door CLOSED!");
     }
 
     // If switch is LOW, door is OPEN 
     else {
       reedSwitchStatus = false;  // Door is OPEN
-      Serial.println("Door OPEN!");
+      DEBUG_PRINTLN("Door OPEN!");
     }
 
     reedSwitchStateChanged = false;  // Reset the flag

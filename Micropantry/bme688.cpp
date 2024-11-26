@@ -1,5 +1,3 @@
-/* The code baseline for this is from bsec library example */
-
 #include "bme688.h"
 
 /* Create an object of the class Bsec2 */
@@ -63,7 +61,7 @@ void bme688_init(void)
     /* Whenever new data is available call the newDataCallback function */
     envSensor.attachCallback(newDataCallback);
 
-    Serial.println("BSEC library version " + \
+    DEBUG_PRINTLN("BSEC library version " + \
             String(envSensor.version.major) + "." \
             + String(envSensor.version.minor) + "." \
             + String(envSensor.version.major_bugfix) + "." \
@@ -101,7 +99,7 @@ void newDataCallback(const bme68xData data, const bsecOutputs outputs, Bsec2 bse
         return;
     }
 
-    Serial.println("BSEC outputs:\n\tTime stamp = " + String((int) (outputs.output[0].time_stamp / INT64_C(1000000))));
+    DEBUG_PRINTLN("BSEC outputs:\n\tTime stamp = " + String((int) (outputs.output[0].time_stamp / INT64_C(1000000))));
     for (uint8_t i = 0; i < outputs.nOutputs; i++)
     {
         const bsecData output  = outputs.output[i];
@@ -109,50 +107,50 @@ void newDataCallback(const bme68xData data, const bsecOutputs outputs, Bsec2 bse
         {
             case BSEC_OUTPUT_IAQ:
                 IAQ = output.signal;
-                Serial.println("\tIAQ = " + String(output.signal));
-                Serial.println("\tIAQ accuracy = " + String((int) output.accuracy));
+                DEBUG_PRINTLN("\tIAQ = " + String(output.signal));
+                DEBUG_PRINTLN("\tIAQ accuracy = " + String((int) output.accuracy));
                 break;
             case BSEC_OUTPUT_RAW_TEMPERATURE:
                 temperature = output.signal;
-                Serial.println("\tTemperature = " + String(output.signal));
+                DEBUG_PRINTLN("\tTemperature = " + String(output.signal));
                 break;
             case BSEC_OUTPUT_RAW_PRESSURE:
                 pressure = output.signal;
-                Serial.println("\tPressure = " + String(output.signal));
+                DEBUG_PRINTLN("\tPressure = " + String(output.signal));
                 break;
             case BSEC_OUTPUT_RAW_HUMIDITY:
                 humidity = output.signal;
-                Serial.println("\tHumidity = " + String(output.signal));
+                DEBUG_PRINTLN("\tHumidity = " + String(output.signal));
                 break;
             case BSEC_OUTPUT_RAW_GAS:
-                Serial.println("\tGas resistance = " + String(output.signal));
+                DEBUG_PRINTLN("\tGas resistance = " + String(output.signal));
                 break;
             case BSEC_OUTPUT_STABILIZATION_STATUS:
-                Serial.println("\tStabilization status = " + String(output.signal));
+                DEBUG_PRINTLN("\tStabilization status = " + String(output.signal));
                 break;
             case BSEC_OUTPUT_RUN_IN_STATUS:
-                Serial.println("\tRun in status = " + String(output.signal));
+                DEBUG_PRINTLN("\tRun in status = " + String(output.signal));
                 break;
             case BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_TEMPERATURE:
-                Serial.println("\tCompensated temperature = " + String(output.signal));
+                DEBUG_PRINTLN("\tCompensated temperature = " + String(output.signal));
                 break;
             case BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_HUMIDITY:
-                Serial.println("\tCompensated humidity = " + String(output.signal));
+                DEBUG_PRINTLN("\tCompensated humidity = " + String(output.signal));
                 break;
             case BSEC_OUTPUT_STATIC_IAQ:
-                Serial.println("\tStatic IAQ = " + String(output.signal));
+                DEBUG_PRINTLN("\tStatic IAQ = " + String(output.signal));
                 break;
             case BSEC_OUTPUT_CO2_EQUIVALENT:
-                Serial.println("\tCO2 Equivalent = " + String(output.signal));
+                DEBUG_PRINTLN("\tCO2 Equivalent = " + String(output.signal));
                 break;
             case BSEC_OUTPUT_BREATH_VOC_EQUIVALENT:
-                Serial.println("\tbVOC equivalent = " + String(output.signal));
+                DEBUG_PRINTLN("\tbVOC equivalent = " + String(output.signal));
                 break;
             case BSEC_OUTPUT_GAS_PERCENTAGE:
-                Serial.println("\tGas percentage = " + String(output.signal));
+                DEBUG_PRINTLN("\tGas percentage = " + String(output.signal));
                 break;
             case BSEC_OUTPUT_COMPENSATED_GAS:
-                Serial.println("\tCompensated gas = " + String(output.signal));
+                DEBUG_PRINTLN("\tCompensated gas = " + String(output.signal));
                 break;
             default:
                 break;
@@ -164,21 +162,21 @@ void checkBsecStatus(Bsec2 bsec)
 {
     if (bsec.status < BSEC_OK)
     {
-        Serial.println("BSEC error code : " + String(bsec.status));
+        DEBUG_PRINTLN("BSEC error code : " + String(bsec.status));
         errLeds(); /* Halt in case of failure */
     }
     else if (bsec.status > BSEC_OK)
     {
-        Serial.println("BSEC warning code : " + String(bsec.status));
+        DEBUG_PRINTLN("BSEC warning code : " + String(bsec.status));
     }
 
     if (bsec.sensor.status < BME68X_OK)
     {
-        Serial.println("BME68X error code : " + String(bsec.sensor.status));
+        DEBUG_PRINTLN("BME68X error code : " + String(bsec.sensor.status));
         errLeds(); /* Halt in case of failure */
     }
     else if (bsec.sensor.status > BME68X_OK)
     {
-        Serial.println("BME68X warning code : " + String(bsec.sensor.status));
+        DEBUG_PRINTLN("BME68X warning code : " + String(bsec.sensor.status));
     }
 }

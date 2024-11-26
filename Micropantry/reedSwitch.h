@@ -2,6 +2,7 @@
 #define REEDSWITCH_H
 
 #include <Arduino.h>
+#include "debug.h"
 
 #define REED_SWITCH_PIN D0
 
