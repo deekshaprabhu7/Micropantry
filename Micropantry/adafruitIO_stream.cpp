@@ -15,19 +15,19 @@ AdafruitIO_Feed *reedSwitchFeed = io.feed("door-switch");
 
 void adafruitIO_init(void)
 {
-  Serial.print("Connecting to Adafruit IO");
+  DEBUG_PRINT("Connecting to Adafruit IO");
   // connect to io.adafruit.com
   io.connect();
 
   // wait for a connection
   while(io.status() < AIO_CONNECTED) {
-    Serial.print(".");
+    DEBUG_PRINT(".");
     delay(500);
   }
 
   // we are connected
-  Serial.println();
-  Serial.println(io.statusText());
+  DEBUG_PRINTLN();
+  DEBUG_PRINTLN(io.statusText());
 }
 
 
@@ -39,7 +39,7 @@ void adafruitIO_run()
   {
     lastPublishTime = millis();
 
-    Serial.print("Sending Data to Adafruit IO: ");
+    DEBUG_PRINT("Sending Data to Adafruit IO: ");
     temperatureFeed->save(temperature);
     pressureFeed->save(pressure);
     humidityFeed->save(humidity);

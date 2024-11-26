@@ -8,13 +8,13 @@ void wifiComm_init(void)
 {
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
-  Serial.print("Connecting to WiFi ..");
+  DEBUG_PRINT("Connecting to WiFi ..");
   while (WiFi.status() != WL_CONNECTED) {
-    Serial.print('.');
+    DEBUG_PRINT('.');
     delay(1000);
   }
-  Serial.println();
-  Serial.println(WiFi.localIP());
+  DEBUG_PRINTLN();
+  DEBUG_PRINTLN(WiFi.localIP());
 }
 
 void wifiSetup(void) {

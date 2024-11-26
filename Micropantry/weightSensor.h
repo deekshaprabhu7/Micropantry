@@ -3,6 +3,7 @@
 
 #include <Wire.h>
 #include "Adafruit_MPR121.h"
+#include "debug.h"
 
 #ifndef _BV
 #define _BV(bit) (1 << (bit)) 

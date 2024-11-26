@@ -20,10 +20,10 @@ void mpr121_init(void)
   // Default address is 0x5A, if tied to 3.3V its 0x5B
   // If tied to SDA its 0x5C and if SCL then 0x5D
   if (!cap.begin(0x5B)) {
-    Serial.println("MPR121 not found, check wiring?");
+    DEBUG_PRINTLN("MPR121 not found, check wiring?");
     while (1);
   }
-  Serial.println("MPR121 found!");
+  DEBUG_PRINTLN("MPR121 found!");
   cap.setThresholds(2, 3);
 
   pinMode(MPR121_INT_PIN, INPUT_PULLUP);  // Configure INT pin as input with pull-up
@@ -42,11 +42,11 @@ void mpr121_run(void)
     for (uint8_t i=0; i<12; i++) {
       // it if *is* touched and *wasnt* touched before, alert!
       if ((currtouched & _BV(i)) && !(lasttouched & _BV(i)) ) {
-        Serial.print(i); Serial.println(" touched");
+        DEBUG_PRINT(i); DEBUG_PRINTLN(" touched");
       }
       // if it *was* touched and now *isnt*, alert!
       if (!(currtouched & _BV(i)) && (lasttouched & _BV(i)) ) {
-        Serial.print(i); Serial.println(" released");
+        DEBUG_PRINT(i); DEBUG_PRINTLN(" released");
       }
     }
 
@@ -57,17 +57,19 @@ void mpr121_run(void)
     return;
     
     // debugging info, what
-    Serial.print("\t\t\t\t\t\t\t\t\t\t\t\t\t 0x"); Serial.println(cap.touched(), HEX);
-    Serial.print("Filt: ");
-    for (uint8_t i=0; i<12; i++) {
-      Serial.print(cap.filteredData(i)); Serial.print("\t");
+    if (Serial) {
+      Serial.print("\t\t\t\t\t\t\t\t\t\t\t\t\t 0x"); Serial.println(cap.touched(), HEX);
     }
-    Serial.println();
-    Serial.print("Base: ");
+    DEBUG_PRINT("Filt: ");
     for (uint8_t i=0; i<12; i++) {
-      Serial.print(cap.baselineData(i)); Serial.print("\t");
+      DEBUG_PRINT(cap.filteredData(i)); DEBUG_PRINT("\t");
     }
-    Serial.println();
+    DEBUG_PRINTLN();
+    DEBUG_PRINT("Base: ");
+    for (uint8_t i=0; i<12; i++) {
+      DEBUG_PRINT(cap.baselineData(i)); DEBUG_PRINT("\t");
+    }
+    DEBUG_PRINTLN();
     
     // put a delay so it isn't overwhelming
     delay(100);

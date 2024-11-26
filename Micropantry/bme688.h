@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <bsec2.h>
+#include "debug.h"
 
 extern float temperature;
 extern float pressure;

@@ -3,6 +3,7 @@
 
 #include <WiFi.h>
 #include <Arduino.h>
+#include "debug.h"
 
 extern const char* ssid;
 extern const char* password;
