@@ -11,6 +11,10 @@ const float calibrationFactor = -23.7; // Replace with your calibration value
 volatile float currentWeight = 0;      // Variable to store weight
 hw_timer_t *timer = NULL;              // Timer instance
 
+// Variable to store the cloud data flag or value
+volatile bool weightBelowThreshold = false; // Flag indicating if weight < 1000g
+volatile float weightToSend = 0;            // Value to send to the cloud
+
 // Interrupt handler for updating weight
 void IRAM_ATTR onTimer() {
   if (LoadCell.update()) {
@@ -46,4 +50,13 @@ void weightSensor_run() {
   DEBUG_PRINT("Weight: ");
   DEBUG_PRINT(currentWeight);
   DEBUG_PRINTLN(" grams");
+
+  // Check if weight is below threshold
+  if (currentWeight < WEIGHTTHRESHOLD) {
+    weightBelowThreshold = true;      // Set the flag
+    weightToSend = currentWeight;     // Store the weight for sending
+    DEBUG_PRINTLN("Weight is below threshold. Ready to send to cloud.");
+  } else {
+    weightBelowThreshold = false;     // Reset the flag if weight is >= WEIGHTTHRESHOLD
+  }
 }

@@ -5,6 +5,8 @@
 #include "Arduino.h"
 #include "debug.h"
 
+#define WEIGHTTHRESHOLD 1000
+
 void weightSensor_init(void);
 void weightSensor_run(void);
 
