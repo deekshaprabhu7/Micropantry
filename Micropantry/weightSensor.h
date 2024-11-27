@@ -1,17 +1,10 @@
 #ifndef WEIGHTSENSOR_H
 #define WEIGHTSENSOR_H
 
-#include <Wire.h>
-#include "Adafruit_MPR121.h"
+#include <HX711_ADC.h>
 #include "debug.h"
 
-#ifndef _BV
-#define _BV(bit) (1 << (bit)) 
-#endif
-
-#define MPR121_INT_PIN D1
-
-void mpr121_init(void);
-void mpr121_run(void);
+void weightSensor_init(void);
+void weightSensor_run(void);
 
 #endif

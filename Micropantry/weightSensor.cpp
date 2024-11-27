@@ -1,77 +1,45 @@
 #include "weightSensor.h"
 
-// You can have up to 4 on one i2c bus but one is enough for testing!
-Adafruit_MPR121 cap = Adafruit_MPR121();
+// Pin configuration
+const int HX711_dout = D4; // HX711 DOUT pin
+const int HX711_sck = D5;  // HX711 SCK pin
 
-// Keeps track of the last pins touched
-// so we know when buttons are 'released'
-uint16_t lasttouched = 0;
-uint16_t currtouched = 0;
+// HX711 initialization
+HX711_ADC LoadCell(HX711_dout, HX711_sck);
 
-volatile bool touchInterruptFlag = false;
+const float calibrationFactor = -23.7; // Replace with your calibration value
 
-//  ISR triggered by the MPR121 INT pin
-void IRAM_ATTR touchISR() {
-  touchInterruptFlag = true;  // Set flag when interrupt occurs
-}
-
-void mpr121_init(void)
+void weightSensor_init()
 {
-  // Default address is 0x5A, if tied to 3.3V its 0x5B
-  // If tied to SDA its 0x5C and if SCL then 0x5D
-  if (!cap.begin(0x5B)) {
-    DEBUG_PRINTLN("MPR121 not found, check wiring?");
+  DEBUG_PRINTLN("Starting weight measurement...");
+
+  // Initialize the HX711
+  LoadCell.begin();
+  LoadCell.setSamplesInUse(4); // Reduce samples for faster response
+  unsigned long stabilizingTime = 1000; // Stabilizing time reduced
+  LoadCell.start(stabilizingTime, true); // Initialize with tare
+
+  if (LoadCell.getTareTimeoutFlag() || LoadCell.getSignalTimeoutFlag()) {
+    DEBUG_PRINTLN("Timeout! Check wiring and connections.");
     while (1);
+  } else {
+    LoadCell.setCalFactor(calibrationFactor); // Set the calibration factor
+    DEBUG_PRINTLN("HX711 is ready.");
   }
-  DEBUG_PRINTLN("MPR121 found!");
-  cap.setThresholds(2, 3);
-
-  pinMode(MPR121_INT_PIN, INPUT_PULLUP);  // Configure INT pin as input with pull-up
-  attachInterrupt(digitalPinToInterrupt(MPR121_INT_PIN), touchISR, FALLING);  // Trigger on falling edge
 }
 
-void mpr121_run(void)
+
+void weightSensor_run()
 {
-  // Check if the ISR flag is set (indicating a touch event)
-  if (touchInterruptFlag) {
-    touchInterruptFlag = false;  // Reset the flag
-
-    // Get the currently touched pads
-    currtouched = cap.touched();
-    
-    for (uint8_t i=0; i<12; i++) {
-      // it if *is* touched and *wasnt* touched before, alert!
-      if ((currtouched & _BV(i)) && !(lasttouched & _BV(i)) ) {
-        DEBUG_PRINT(i); DEBUG_PRINTLN(" touched");
-      }
-      // if it *was* touched and now *isnt*, alert!
-      if (!(currtouched & _BV(i)) && (lasttouched & _BV(i)) ) {
-        DEBUG_PRINT(i); DEBUG_PRINTLN(" released");
-      }
-    }
-
-    // reset our state
-    lasttouched = currtouched;
-
-    // comment out this line for detailed data from the sensor!
-    return;
-    
-    // debugging info, what
-    if (Serial) {
-      Serial.print("\t\t\t\t\t\t\t\t\t\t\t\t\t 0x"); Serial.println(cap.touched(), HEX);
-    }
-    DEBUG_PRINT("Filt: ");
-    for (uint8_t i=0; i<12; i++) {
-      DEBUG_PRINT(cap.filteredData(i)); DEBUG_PRINT("\t");
-    }
-    DEBUG_PRINTLN();
-    DEBUG_PRINT("Base: ");
-    for (uint8_t i=0; i<12; i++) {
-      DEBUG_PRINT(cap.baselineData(i)); DEBUG_PRINT("\t");
-    }
-    DEBUG_PRINTLN();
-    
-    // put a delay so it isn't overwhelming
-    delay(100);
+  // Update HX711 and get weight
+  if (LoadCell.update()) {
+    float weight = LoadCell.getData();
+    DEBUG_PRINT("Weight: ");
+    DEBUG_PRINT(weight);
+    DEBUG_PRINTLN(" grams");
   }
+
+  delay(10); // Minimal delay for responsiveness
+
 }
+
