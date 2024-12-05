@@ -3,6 +3,7 @@
 #include "reedSwitch.h"
 #include "adafruitIO_stream.h"
 #include "weightSensor.h"
+#include "mpr121.h"
 #include "debug.h"
 
 void setup() {
@@ -16,24 +17,26 @@ void setup() {
     // Wait up to 2 seconds for Serial connection, then continue
   }
 
-  if (Serial) {
-    DEBUG_PRINTLN("Micropantry Sensor Measurement!");
-  }
+  DEBUG_PRINTLN("Micropantry Sensor Measurement!");
+
+  // delay(5000);
 
   wifiSetup();
   adafruitIO_init();
   bme688_init();
   reedSwitch_init();
-  mpr121_init();
+  weightSensor_init();
+  //mpr121_init();
 
-  if (Serial) {
-    DEBUG_PRINTLN("Micropantry Sensor Measurement Setup COMPLETE!");
-  }
+  // delay(5000);
+
+  DEBUG_PRINTLN("Micropantry Sensor Measurement Setup COMPLETE!");
 }
 
 void loop() {
   bme688_run();
   reedSwitch_run();
   adafruitIO_run();
-  mpr121_run();
+  weightSensor_run();
+  //mpr121_run();
 }

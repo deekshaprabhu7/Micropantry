@@ -128,30 +128,30 @@ void newDataCallback(const bme68xData data, const bsecOutputs outputs, Bsec2 bse
             case BSEC_OUTPUT_STABILIZATION_STATUS:
                 DEBUG_PRINTLN("\tStabilization status = " + String(output.signal));
                 break;
-            case BSEC_OUTPUT_RUN_IN_STATUS:
-                DEBUG_PRINTLN("\tRun in status = " + String(output.signal));
-                break;
-            case BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_TEMPERATURE:
-                DEBUG_PRINTLN("\tCompensated temperature = " + String(output.signal));
-                break;
-            case BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_HUMIDITY:
-                DEBUG_PRINTLN("\tCompensated humidity = " + String(output.signal));
-                break;
-            case BSEC_OUTPUT_STATIC_IAQ:
-                DEBUG_PRINTLN("\tStatic IAQ = " + String(output.signal));
-                break;
-            case BSEC_OUTPUT_CO2_EQUIVALENT:
-                DEBUG_PRINTLN("\tCO2 Equivalent = " + String(output.signal));
-                break;
-            case BSEC_OUTPUT_BREATH_VOC_EQUIVALENT:
-                DEBUG_PRINTLN("\tbVOC equivalent = " + String(output.signal));
-                break;
-            case BSEC_OUTPUT_GAS_PERCENTAGE:
-                DEBUG_PRINTLN("\tGas percentage = " + String(output.signal));
-                break;
-            case BSEC_OUTPUT_COMPENSATED_GAS:
-                DEBUG_PRINTLN("\tCompensated gas = " + String(output.signal));
-                break;
+            // case BSEC_OUTPUT_RUN_IN_STATUS:
+            //     DEBUG_PRINTLN("\tRun in status = " + String(output.signal));
+            //     break;
+            // case BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_TEMPERATURE:
+            //     DEBUG_PRINTLN("\tCompensated temperature = " + String(output.signal));
+            //     break;
+            // case BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_HUMIDITY:
+            //     DEBUG_PRINTLN("\tCompensated humidity = " + String(output.signal));
+            //     break;
+            // case BSEC_OUTPUT_STATIC_IAQ:
+            //     DEBUG_PRINTLN("\tStatic IAQ = " + String(output.signal));
+            //     break;
+            // case BSEC_OUTPUT_CO2_EQUIVALENT:
+            //     DEBUG_PRINTLN("\tCO2 Equivalent = " + String(output.signal));
+            //     break;
+            // case BSEC_OUTPUT_BREATH_VOC_EQUIVALENT:
+            //     DEBUG_PRINTLN("\tbVOC equivalent = " + String(output.signal));
+            //     break;
+            // case BSEC_OUTPUT_GAS_PERCENTAGE:
+            //     DEBUG_PRINTLN("\tGas percentage = " + String(output.signal));
+            //     break;
+            // case BSEC_OUTPUT_COMPENSATED_GAS:
+            //     DEBUG_PRINTLN("\tCompensated gas = " + String(output.signal));
+            //     break;
             default:
                 break;
         }

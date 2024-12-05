@@ -1,17 +1,18 @@
 #ifndef WEIGHTSENSOR_H
 #define WEIGHTSENSOR_H
 
-#include <Wire.h>
-#include "Adafruit_MPR121.h"
+#include <HX711_ADC.h>
+#include "Arduino.h"
 #include "debug.h"
 
-#ifndef _BV
-#define _BV(bit) (1 << (bit)) 
-#endif
+#define WEIGHTTHRESHOLD 1000
 
-#define MPR121_INT_PIN D1
+extern volatile float currentWeight_shelf1;      // Current weight on shelf1
+extern volatile float currentWeight_shelf2;      // Current weight on shelf2
+extern volatile float currentWeight_shelf3;      // Current weight on shelf3
 
-void mpr121_init(void);
-void mpr121_run(void);
+
+void weightSensor_init(void);
+void weightSensor_run(void);
 
 #endif

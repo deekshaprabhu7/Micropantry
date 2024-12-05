@@ -11,7 +11,9 @@ AdafruitIO_Feed *pressureFeed = io.feed("Pressure");
 AdafruitIO_Feed *humidityFeed = io.feed("Humidity");
 AdafruitIO_Feed *IAQFeed = io.feed("IAQ");
 AdafruitIO_Feed *reedSwitchFeed = io.feed("door-switch");
-
+AdafruitIO_Feed *weightShelf1Feed = io.feed("Weight-Shelf1");
+AdafruitIO_Feed *weightShelf2Feed = io.feed("Weight-Shelf2");
+AdafruitIO_Feed *weightShelf3Feed = io.feed("Weight-Shelf3");
 
 void adafruitIO_init(void)
 {
@@ -45,5 +47,8 @@ void adafruitIO_run()
     humidityFeed->save(humidity);
     IAQFeed->save(IAQ);
     reedSwitchFeed->save(reedSwitchStatus);
+    weightShelf1Feed->save(currentWeight_shelf1);
+    weightShelf2Feed->save(currentWeight_shelf2);
+    weightShelf2Feed->save(currentWeight_shelf3);
   }
 }
