@@ -17,9 +17,9 @@ void setup() {
     // Wait up to 2 seconds for Serial connection, then continue
   }
 
-  if (Serial) {
-    DEBUG_PRINTLN("Micropantry Sensor Measurement!");
-  }
+  DEBUG_PRINTLN("Micropantry Sensor Measurement!");
+
+  // delay(5000);
 
   wifiSetup();
   adafruitIO_init();
@@ -28,9 +28,9 @@ void setup() {
   weightSensor_init();
   //mpr121_init();
 
-  if (Serial) {
-    DEBUG_PRINTLN("Micropantry Sensor Measurement Setup COMPLETE!");
-  }
+  // delay(5000);
+
+  DEBUG_PRINTLN("Micropantry Sensor Measurement Setup COMPLETE!");
 }
 
 void loop() {

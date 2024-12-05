@@ -7,6 +7,11 @@
 
 #define WEIGHTTHRESHOLD 1000
 
+extern volatile float currentWeight_shelf1;      // Current weight on shelf1
+extern volatile float currentWeight_shelf2;      // Current weight on shelf2
+extern volatile float currentWeight_shelf3;      // Current weight on shelf3
+
+
 void weightSensor_init(void);
 void weightSensor_run(void);
 
