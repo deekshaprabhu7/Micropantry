@@ -37,6 +37,20 @@ void adafruitIO_run()
 {
   io.run();
 
+  // Send all door events in the queue
+  while (!doorEvents.empty()) {
+    DoorEvent event = doorEvents.front();
+    doorEvents.pop(); // Remove the event from the queue
+
+    // Send the event to Adafruit IO immediately
+    String stateString = event.state ? "CLOSED" : "OPEN";
+    DEBUG_PRINT("Sending Door Event: " + stateString + " at ");
+    DEBUG_PRINTLN(event.timestamp);
+
+    reedSwitchFeed->save(event.state); // Send to Adafruit IO
+  }
+
+
   if (millis() - lastPublishTime > publishInterval)
   {
     lastPublishTime = millis();
@@ -46,7 +60,7 @@ void adafruitIO_run()
     pressureFeed->save(pressure);
     humidityFeed->save(humidity);
     IAQFeed->save(IAQ);
-    reedSwitchFeed->save(reedSwitchStatus);
+    //reedSwitchFeed->save(reedSwitchStatus);
     weightShelf1Feed->save(currentWeight_shelf1);
     weightShelf2Feed->save(currentWeight_shelf2);
     weightShelf2Feed->save(currentWeight_shelf3);
