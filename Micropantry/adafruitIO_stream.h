@@ -7,6 +7,7 @@
 #include "bme688.h"
 #include "reedSwitch.h"
 #include "debug.h"
+#include "weightSensor.h"
 
 // comment out the following lines if you are using fona or ethernet
 //#include "AdafruitIO_WiFi.h"

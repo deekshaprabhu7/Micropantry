@@ -17,11 +17,12 @@ HX711_ADC LoadCell_shelf2(HX711_shelf2_dout, HX711_shelf2_sck);
 HX711_ADC LoadCell_shelf3(HX711_shelf3_dout, HX711_shelf3_sck);
 
 volatile bool weightUpdateFlag = false; // Flag for weight update
-//const float calibrationFactor_shelf1 = 18.66; // Calibration value for shelf1
-//const float calibrationFactor_shelf1 = -21.94; // Calibration value for shelf1
-const float calibrationFactor_shelf1 = -24.28; // Calibration value for shelf1
-const float calibrationFactor_shelf2 = 22.36; // Calibration value for shelf2
-const float calibrationFactor_shelf3 = 21.12; // Calibration value for shelf2
+// const float calibrationFactor_shelf1 = -24.28; // Calibration value for shelf1 lab
+// const float calibrationFactor_shelf2 = 22.36; // Calibration value for shelf2 lab
+// const float calibrationFactor_shelf3 = 21.12; // Calibration value for shelf3 lab
+const float calibrationFactor_shelf1 = -21.98; // Calibration value for shelf1 deploy
+const float calibrationFactor_shelf2 = -20.54; // Calibration value for shelf2 deploy
+const float calibrationFactor_shelf3 = -21.88; // Calibration value for shelf3 deploy
 volatile float currentWeight_shelf1 = 0;      // Current weight on shelf1
 volatile float currentWeight_shelf2 = 0;      // Current weight on shelf2
 volatile float currentWeight_shelf3 = 0;      // Current weight on shelf3
@@ -34,6 +35,8 @@ volatile bool weightBelowThreshold_shelf3 = false; // Flag for shelf3
 volatile float weightToSend_shelf1 = 0;            // Value to send to the cloud for shelf1
 volatile float weightToSend_shelf2 = 0;            // Value to send to the cloud for shelf2
 volatile float weightToSend_shelf3 = 0;            // Value to send to the cloud for shelf3
+
+volatile float totalWeightToSend = 0;
 
 void IRAM_ATTR onTimer() {
     weightUpdateFlag = true; // Set the flag
@@ -107,6 +110,9 @@ void weightSensor_run() {
     if (LoadCell_shelf3.update()) {
       currentWeight_shelf3 = LoadCell_shelf3.getData(); // Update weight for shelf3
     }
+    
+    // Compute the total weight
+    totalWeightToSend = currentWeight_shelf1 + currentWeight_shelf2 + currentWeight_shelf3;
 
     // Print the weights every 2 seconds
     unsigned long currentPrintMillis = millis();
@@ -124,6 +130,10 @@ void weightSensor_run() {
 
       DEBUG_PRINT("Shelf3 Weight: ");
       DEBUG_PRINT(currentWeight_shelf3);
+      DEBUG_PRINT(" grams");
+
+      DEBUG_PRINT("Total Weight: ");
+      DEBUG_PRINT(totalWeightToSend);
       DEBUG_PRINTLN(" grams");
     }
   }
