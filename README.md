@@ -13,9 +13,10 @@ The following libraries are installed:
 2. Adafruit BME680 Library (For BME680 sensor functionality)
 3. bsec2 (For BME680 sensor functionality)
 4. BME680x Sensor Library (For BME680 sensor functionality)
-5. Adafruit MPR121 (For weight sensor funtionality)
-6. Seeed Arduino SSCMA (For camera functionality)
-7. Eigen (For camera functionality)
+5. HX711_ADC (by Olav Kallhovd) (For Load Cell ADC)
+6. Adafruit MPR121 (For weight sensor funtionality)
+7. Seeed Arduino SSCMA (For camera functionality)
+8. Eigen (For camera functionality)
 
 
 The following boards are installed:
