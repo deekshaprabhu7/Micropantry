@@ -1,7 +1,9 @@
 #include "adafruitIO_stream.h"
 
-unsigned long lastPublishTime = 0;  // Variable to store the last time data was sent
-unsigned long publishInterval = 30000;  // Interval for sending data in milliseconds (10 seconds)
+unsigned long lastPublishTotalWeightTime = 0;  // Last publish time for total weight
+unsigned long lastPublishSensorTime = 0;  // Last publish time for other sensor data
+const unsigned long publishIntervalTotalWeight = 5000;  // 5 seconds interval
+const unsigned long publishIntervalSensors = 60000;  // 30 seconds interval
 
 AdafruitIO_WiFi io(IO_USERNAME, IO_KEY, ssid, password);
 
@@ -11,9 +13,11 @@ AdafruitIO_Feed *pressureFeed = io.feed("Pressure");
 AdafruitIO_Feed *humidityFeed = io.feed("Humidity");
 AdafruitIO_Feed *IAQFeed = io.feed("IAQ");
 AdafruitIO_Feed *reedSwitchFeed = io.feed("door-switch");
+AdafruitIO_Feed *reedSwitchStatusFeed = io.feed("Door Status");
 AdafruitIO_Feed *weightShelf1Feed = io.feed("Weight-Shelf1");
 AdafruitIO_Feed *weightShelf2Feed = io.feed("Weight-Shelf2");
 AdafruitIO_Feed *weightShelf3Feed = io.feed("Weight-Shelf3");
+AdafruitIO_Feed *totalWeightFeed = io.feed("Total-Weight");
 
 void adafruitIO_init(void)
 {
@@ -22,7 +26,7 @@ void adafruitIO_init(void)
   io.connect();
 
   // wait for a connection
-  while(io.status() < AIO_CONNECTED) {
+  while (io.status() < AIO_CONNECTED) {
     DEBUG_PRINT(".");
     delay(500);
   }
@@ -32,16 +36,43 @@ void adafruitIO_init(void)
   DEBUG_PRINTLN(io.statusText());
 }
 
-
 void adafruitIO_run()
 {
   io.run();
 
-  if (millis() - lastPublishTime > publishInterval)
-  {
-    lastPublishTime = millis();
+  // Send all door events in the queue
+  while (!doorEvents.empty()) {
+    DoorEvent event = doorEvents.front();
+    doorEvents.pop(); // Remove the event from the queue
 
-    DEBUG_PRINT("Sending Data to Adafruit IO: ");
+    // Convert state to a string message
+    String stateString = event.state ? "Door CLOSED" : "Door OPEN";
+
+    // Print for debugging
+    DEBUG_PRINT("Sending Door Event: ");
+    DEBUG_PRINTLN(stateString + " at " + String(event.timestamp));
+
+    // Send the message to Adafruit IO
+    reedSwitchFeed->save(event.state);         // Send to Adafruit IO
+    reedSwitchStatusFeed->save(stateString);  // Send the string to Adafruit IO feed
+  }
+
+  unsigned long currentMillis = millis();
+
+  // Check if it's time to send total weight data (every 5 seconds)
+  if (currentMillis - lastPublishTotalWeightTime > publishIntervalTotalWeight) {
+    lastPublishTotalWeightTime = currentMillis;
+
+    DEBUG_PRINT("Sending Total Weight to Adafruit IO: ");
+    totalWeightFeed->save(totalWeightToSend);
+    DEBUG_PRINTLN(totalWeightToSend);
+  }
+
+  // Check if it's time to send other sensor data (every 30 seconds)
+  if (currentMillis - lastPublishSensorTime > publishIntervalSensors) {
+    lastPublishSensorTime = currentMillis;
+
+    DEBUG_PRINT("Sending Sensor Data to Adafruit IO: ");
     temperatureFeed->save(temperature);
     pressureFeed->save(pressure);
     humidityFeed->save(humidity);
@@ -49,6 +80,7 @@ void adafruitIO_run()
     reedSwitchFeed->save(reedSwitchStatus);
     weightShelf1Feed->save(currentWeight_shelf1);
     weightShelf2Feed->save(currentWeight_shelf2);
-    weightShelf2Feed->save(currentWeight_shelf3);
+    weightShelf3Feed->save(currentWeight_shelf3);
+    DEBUG_PRINTLN("Sensor Data Sent");
   }
 }

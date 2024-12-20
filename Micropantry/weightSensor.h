@@ -10,6 +10,7 @@
 extern volatile float currentWeight_shelf1;      // Current weight on shelf1
 extern volatile float currentWeight_shelf2;      // Current weight on shelf2
 extern volatile float currentWeight_shelf3;      // Current weight on shelf3
+extern volatile float totalWeightToSend;
 
 
 void weightSensor_init(void);

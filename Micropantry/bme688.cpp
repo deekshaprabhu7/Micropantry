@@ -31,7 +31,9 @@ void bme688_init(void)
     pinMode(PANIC_LED, OUTPUT);
 
     /* Valid for boards with USB-COM. Wait until the port is open */
-    while(!Serial) delay(10);
+    if (Serial) {
+      while (!Serial) delay(10); // Wait only if Serial is connected
+    }
 
     /* Initialize the library and interfaces */
     if (!envSensor.begin(BME68X_I2C_ADDR_HIGH, Wire))
