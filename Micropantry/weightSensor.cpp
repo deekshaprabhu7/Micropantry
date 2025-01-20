@@ -7,6 +7,8 @@ const int HX711_shelf2_dout = D3; // HX711 DOUT pin for shelf2
 const int HX711_shelf2_sck = D2;  // HX711 SCK pin for shelf2
 const int HX711_shelf3_dout = D6; // HX711 DOUT pin for shelf3
 const int HX711_shelf3_sck = D7;  // HX711 SCK pin for shelf3
+const int HX711_shelf4_dout = D1; // HX711 DOUT pin for shelf4
+const int HX711_shelf4_sck = D0;  // HX711 SCK pin for shelf4
 
 unsigned long lastPrintTime = 0; // To track the last print time
 
@@ -15,26 +17,31 @@ unsigned long lastPrintTime = 0; // To track the last print time
 HX711_ADC LoadCell_shelf1(HX711_shelf1_dout, HX711_shelf1_sck);
 HX711_ADC LoadCell_shelf2(HX711_shelf2_dout, HX711_shelf2_sck);
 HX711_ADC LoadCell_shelf3(HX711_shelf3_dout, HX711_shelf3_sck);
+HX711_ADC LoadCell_shelf4(HX711_shelf4_dout, HX711_shelf4_sck);
 
 volatile bool weightUpdateFlag = false; // Flag for weight update
 // const float calibrationFactor_shelf1 = -24.28; // Calibration value for shelf1 lab
 // const float calibrationFactor_shelf2 = 22.36; // Calibration value for shelf2 lab
 // const float calibrationFactor_shelf3 = 21.12; // Calibration value for shelf3 lab
-const float calibrationFactor_shelf1 = -21.98; // Calibration value for shelf1 deploy
-const float calibrationFactor_shelf2 = -20.54; // Calibration value for shelf2 deploy
-const float calibrationFactor_shelf3 = -21.88; // Calibration value for shelf3 deploy
+const float calibrationFactor_shelf1 = -22.35; // Calibration value for shelf1 deploy
+const float calibrationFactor_shelf2 = -19.86; // Calibration value for shelf2 deploy
+const float calibrationFactor_shelf3 = -22.11; // Calibration value for shelf3 deploy
+const float calibrationFactor_shelf4 = -24.3; // Calibration value for shelf4 deploy
 volatile float currentWeight_shelf1 = 0;      // Current weight on shelf1
 volatile float currentWeight_shelf2 = 0;      // Current weight on shelf2
 volatile float currentWeight_shelf3 = 0;      // Current weight on shelf3
+volatile float currentWeight_shelf4 = 0;      // Current weight on shelf4
 hw_timer_t *timer = NULL;                     // Timer instance
 
 // Variable to store the cloud data flag or value
 volatile bool weightBelowThreshold_shelf1 = false; // Flag for shelf1
 volatile bool weightBelowThreshold_shelf2 = false; // Flag for shelf2
 volatile bool weightBelowThreshold_shelf3 = false; // Flag for shelf3
+volatile bool weightBelowThreshold_shelf4 = false; // Flag for shelf4
 volatile float weightToSend_shelf1 = 0;            // Value to send to the cloud for shelf1
 volatile float weightToSend_shelf2 = 0;            // Value to send to the cloud for shelf2
 volatile float weightToSend_shelf3 = 0;            // Value to send to the cloud for shelf3
+volatile float weightToSend_shelf4 = 0;            // Value to send to the cloud for shelf4
 
 volatile float totalWeightToSend = 0;
 
@@ -81,6 +88,18 @@ void weightSensor_init() {
     DEBUG_PRINTLN("HX711 for shelf3 is ready.");
   }
 
+  // Initialize HX711 for shelf4
+  LoadCell_shelf4.begin();
+  LoadCell_shelf4.setSamplesInUse(4); // Reduce samples for faster response
+  LoadCell_shelf4.start(1000, true); // Initialize with tare for shelf4
+  if (LoadCell_shelf4.getTareTimeoutFlag() || LoadCell_shelf4.getSignalTimeoutFlag()) {
+    DEBUG_PRINTLN("Timeout for shelf4! Check wiring and connections.");
+    while (1);
+  } else {
+    LoadCell_shelf4.setCalFactor(calibrationFactor_shelf2); // Set the calibration factor for shelf2
+    DEBUG_PRINTLN("HX711 for shelf4 is ready.");
+  }
+
   // Configure timer interrupt
   // timer = timerBegin(1000000);             // Timer with 1-second resolution
   timer = timerBegin(1000000);             // Timer with 1-second resolution
@@ -110,9 +129,12 @@ void weightSensor_run() {
     if (LoadCell_shelf3.update()) {
       currentWeight_shelf3 = LoadCell_shelf3.getData(); // Update weight for shelf3
     }
+    if (LoadCell_shelf4.update()) {
+      currentWeight_shelf4 = LoadCell_shelf4.getData(); // Update weight for shelf4
+    }
     
     // Compute the total weight
-    totalWeightToSend = currentWeight_shelf1 + currentWeight_shelf2 + currentWeight_shelf3;
+    totalWeightToSend = currentWeight_shelf1 + currentWeight_shelf2 + currentWeight_shelf3 + currentWeight_shelf4;
 
     // Print the weights every 2 seconds
     unsigned long currentPrintMillis = millis();
@@ -130,7 +152,11 @@ void weightSensor_run() {
 
       DEBUG_PRINT("Shelf3 Weight: ");
       DEBUG_PRINT(currentWeight_shelf3);
-      DEBUG_PRINT(" grams");
+      DEBUG_PRINT(" grams, ");
+
+      DEBUG_PRINT("Shelf4 Weight: ");
+      DEBUG_PRINT(currentWeight_shelf4);
+      DEBUG_PRINT(" grams, ");
 
       DEBUG_PRINT("Total Weight: ");
       DEBUG_PRINT(totalWeightToSend);

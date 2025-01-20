@@ -11,12 +11,13 @@ AdafruitIO_WiFi io(IO_USERNAME, IO_KEY, ssid, password);
 AdafruitIO_Feed *temperatureFeed = io.feed("Temperature");
 AdafruitIO_Feed *pressureFeed = io.feed("Pressure");
 AdafruitIO_Feed *humidityFeed = io.feed("Humidity");
-AdafruitIO_Feed *IAQFeed = io.feed("IAQ");
+// AdafruitIO_Feed *IAQFeed = io.feed("IAQ");
 AdafruitIO_Feed *reedSwitchFeed = io.feed("door-switch");
 AdafruitIO_Feed *reedSwitchStatusFeed = io.feed("Door Status");
 AdafruitIO_Feed *weightShelf1Feed = io.feed("Weight-Shelf1");
 AdafruitIO_Feed *weightShelf2Feed = io.feed("Weight-Shelf2");
 AdafruitIO_Feed *weightShelf3Feed = io.feed("Weight-Shelf3");
+AdafruitIO_Feed *weightShelf4Feed = io.feed("Weight-Shelf4");
 AdafruitIO_Feed *totalWeightFeed = io.feed("Total-Weight");
 
 void adafruitIO_init(void)
@@ -76,11 +77,12 @@ void adafruitIO_run()
     temperatureFeed->save(temperature);
     pressureFeed->save(pressure);
     humidityFeed->save(humidity);
-    IAQFeed->save(IAQ);
+    // IAQFeed->save(IAQ);
     reedSwitchFeed->save(reedSwitchStatus);
     weightShelf1Feed->save(currentWeight_shelf1);
     weightShelf2Feed->save(currentWeight_shelf2);
     weightShelf3Feed->save(currentWeight_shelf3);
+    weightShelf4Feed->save(currentWeight_shelf4);
     DEBUG_PRINTLN("Sensor Data Sent");
   }
 }
