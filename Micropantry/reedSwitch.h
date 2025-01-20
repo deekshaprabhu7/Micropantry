@@ -5,7 +5,7 @@
 #include <queue>
 #include "debug.h"
 
-#define REED_SWITCH_PIN D0
+#define REED_SWITCH_PIN D8
 
 extern bool reedSwitchStatus;
 

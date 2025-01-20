@@ -11,7 +11,7 @@ void IRAM_ATTR reedSwitchStateChange() {
 }
 
 void reedSwitch_init(void) {
-  pinMode(REED_SWITCH_PIN, INPUT);
+  pinMode(REED_SWITCH_PIN, INPUT_PULLUP); // Use pull-up resistor for stable input
   attachInterrupt(digitalPinToInterrupt(REED_SWITCH_PIN), reedSwitchStateChange, CHANGE);
   DEBUG_PRINTLN("Reed Switch (Door) Interrupt Setup Complete!");
 }
@@ -24,19 +24,18 @@ void reedSwitch_run(void) {
     // Log the event
     DoorEvent newEvent;
     newEvent.timestamp = currentTime;
-    newEvent.state = (switchState == HIGH); // HIGH = CLOSED, LOW = OPEN
-    doorEvents.push(newEvent);             // Add the event to the queue
+    newEvent.state = (switchState == LOW); // LOW = CLOSED, HIGH = OPEN
+    doorEvents.push(newEvent);            // Add the event to the queue
 
     // Print for debugging
-    if (switchState == HIGH) {
-      DEBUG_PRINTLN("Door CLOSED!");
+    if (switchState == LOW) {
+      DEBUG_PRINTLN("Door CLOSED!");  // LOW = CLOSED
       reedSwitchStatus = true;
     } else {
-      DEBUG_PRINTLN("Door OPEN!");
+      DEBUG_PRINTLN("Door OPEN!");    // HIGH = OPEN
       reedSwitchStatus = false;
     }
 
     reedSwitchStateChanged = false; // Reset the flag
   }
 }
-
