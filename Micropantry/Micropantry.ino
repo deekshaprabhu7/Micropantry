@@ -23,7 +23,7 @@ void setup() {
 
   wifiSetup();
   adafruitIO_init();
-  bme688_init();
+  //bme688_init();
   reedSwitch_init();
   weightSensor_init();
   //mpr121_init();
@@ -34,7 +34,7 @@ void setup() {
 }
 
 void loop() {
-  bme688_run();
+  //bme688_run();
   reedSwitch_run();
   adafruitIO_run();
   weightSensor_run();

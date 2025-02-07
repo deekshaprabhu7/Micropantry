@@ -23,10 +23,14 @@ volatile bool weightUpdateFlag = false; // Flag for weight update
 // const float calibrationFactor_shelf1 = -24.28; // Calibration value for shelf1 lab
 // const float calibrationFactor_shelf2 = 22.36; // Calibration value for shelf2 lab
 // const float calibrationFactor_shelf3 = 21.12; // Calibration value for shelf3 lab
-const float calibrationFactor_shelf1 = -22.35; // Calibration value for shelf1 deploy
-const float calibrationFactor_shelf2 = -19.86; // Calibration value for shelf2 deploy
-const float calibrationFactor_shelf3 = -22.11; // Calibration value for shelf3 deploy
-const float calibrationFactor_shelf4 = -24.3; // Calibration value for shelf4 deploy
+// const float calibrationFactor_shelf1 = -22.35; // Calibration value for shelf1 deploy
+// const float calibrationFactor_shelf2 = -19.86; // Calibration value for shelf2 deploy
+// const float calibrationFactor_shelf3 = -22.11; // Calibration value for shelf bb3 deploy
+// const float calibrationFactor_shelf4 = -24.3; // Calibration value for shelf4 deploy
+const float calibrationFactor_shelf1 = 21.19; // Calibration value for shelf1 deploy
+const float calibrationFactor_shelf2 = -22.69; // Calibration value for shelf2 deploy
+const float calibrationFactor_shelf3 = 18.61; // Calibration value for shelf3 deploy
+const float calibrationFactor_shelf4 = -29.6; // Calibration value for shelf4 deploy
 volatile float currentWeight_shelf1 = 0;      // Current weight on shelf1
 volatile float currentWeight_shelf2 = 0;      // Current weight on shelf2
 volatile float currentWeight_shelf3 = 0;      // Current weight on shelf3
@@ -84,7 +88,7 @@ void weightSensor_init() {
     DEBUG_PRINTLN("Timeout for shelf3! Check wiring and connections.");
     while (1);
   } else {
-    LoadCell_shelf3.setCalFactor(calibrationFactor_shelf2); // Set the calibration factor for shelf2
+    LoadCell_shelf3.setCalFactor(calibrationFactor_shelf3); // Set the calibration factor for shelf2
     DEBUG_PRINTLN("HX711 for shelf3 is ready.");
   }
 
@@ -96,7 +100,7 @@ void weightSensor_init() {
     DEBUG_PRINTLN("Timeout for shelf4! Check wiring and connections.");
     while (1);
   } else {
-    LoadCell_shelf4.setCalFactor(calibrationFactor_shelf2); // Set the calibration factor for shelf2
+    LoadCell_shelf4.setCalFactor(calibrationFactor_shelf4); // Set the calibration factor for shelf2
     DEBUG_PRINTLN("HX711 for shelf4 is ready.");
   }
 
