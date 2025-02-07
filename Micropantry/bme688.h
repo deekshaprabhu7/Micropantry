@@ -15,7 +15,7 @@ extern float IAQ;
 #define PANIC_LED   LED_BUILTIN
 #define ERROR_DUR   1000
 
-#define SAMPLE_RATE		BSEC_SAMPLE_RATE_LP    //ToDo: Change this to BSEC_SAMPLE_RATE_ULP later to reduce frequency once in 300s
+#define SAMPLE_RATE		BSEC_SAMPLE_RATE_ULP    //ToDo: Change this to BSEC_SAMPLE_RATE_ULP later to reduce frequency once in 300s
 
 void bme688_init(void);
 void bme688_run(void);
