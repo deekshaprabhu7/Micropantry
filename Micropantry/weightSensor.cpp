@@ -20,15 +20,10 @@ HX711_ADC LoadCell_shelf3(HX711_shelf3_dout, HX711_shelf3_sck);
 HX711_ADC LoadCell_shelf4(HX711_shelf4_dout, HX711_shelf4_sck);
 
 volatile bool weightUpdateFlag = false; // Flag for weight update
-// const float calibrationFactor_shelf1 = -24.28; // Calibration value for shelf1 lab
-// const float calibrationFactor_shelf2 = 22.36; // Calibration value for shelf2 lab
-// const float calibrationFactor_shelf3 = 21.12; // Calibration value for shelf3 lab
-// const float calibrationFactor_shelf1 = -22.35; // Calibration value for shelf1 deploy
-// const float calibrationFactor_shelf2 = -19.86; // Calibration value for shelf2 deploy
-// const float calibrationFactor_shelf3 = -22.11; // Calibration value for shelf bb3 deploy
-// const float calibrationFactor_shelf4 = -24.3; // Calibration value for shelf4 deploy
-const float calibrationFactor_shelf1 = 21.19; // Calibration value for shelf1 deploy
-const float calibrationFactor_shelf2 = -22.69; // Calibration value for shelf2 deploy
+// const float calibrationFactor_shelf1 = 21.19; // Calibration value for shelf1 deploy
+const float calibrationFactor_shelf1 = 20.53; // Calibration value for shelf1 lab
+// const float calibrationFactor_shelf2 = -22.69; // Calibration value for shelf2 deploy
+const float calibrationFactor_shelf2 = 23.04; // Calibration value for shelf2 lab
 const float calibrationFactor_shelf3 = 18.61; // Calibration value for shelf3 deploy
 const float calibrationFactor_shelf4 = -29.6; // Calibration value for shelf4 deploy
 volatile float currentWeight_shelf1 = 0;      // Current weight on shelf1
